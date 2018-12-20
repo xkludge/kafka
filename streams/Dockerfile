@@ -1,8 +1,9 @@
-FROM python:3
+FROM python:3.6
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /app
 WORKDIR /app
 ADD requirements.txt /app/
 RUN pip install -r requirements.txt
 ADD main.py main.py
-CMD  ["python", "/app/main.py"]
+#CMD  ["python", "/app/main.py"]
+CMD  ["python", "main.py", "worker", "-l", "info"]
