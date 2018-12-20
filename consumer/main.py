@@ -10,7 +10,6 @@ def worker():
     for msg in consumer:
         print("reading msg")
         print (msg)
-        print (msg['value'])
         print("finished msg")
 
     print("Ooops")
