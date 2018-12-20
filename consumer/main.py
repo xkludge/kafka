@@ -6,11 +6,14 @@ def worker():
         'test_topic',
         bootstrap_servers=['kafka:9092'],
         group_id="super_group")
-    print("Connected")
+    print("Connected..")
     for msg in consumer:
+        print("reading msg")
         print (msg)
+        print (msg['value'])
+        print("finished msg")
 
-    print("end of world")
+    print("Ooops")
 
 
 if __name__ == "__main__":
