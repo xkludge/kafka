@@ -5,13 +5,14 @@ from kafka import KafkaProducer
 from faker import Faker
 
 def randBool():
-    if random.randint(0,1000) % 2 == 0:
+    if random.randint(0,100) % 2 == 0:
         return "true"
     return "false"
 
 
 def factoryAnswer(userId):
     fake = Faker()
+    schools = ["123","456","789"]
     return {
             "skillId": str(random.randint(100,200)),
             "questionID": str(random.randint(200,1000)),
@@ -30,7 +31,7 @@ def factoryAnswer(userId):
               "respTime": "5",
             }],
             "userID": userId,
-            "schoolID": "123",
+            "schoolID": random.choice(schools),
     }
 
 
@@ -38,6 +39,7 @@ def worker():
     print("starting worker..")
     producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
     print("Connected..")
+    counter = 0
 
     usersId = ['123','345','678',
                 '789', '123','345',
@@ -46,15 +48,18 @@ def worker():
                 '123','345','678',
                 '789', '123','345',
                 '678','789']
+
+    start_time = time.time()
     for uId in usersId:
         print("sending msg")
-        msg = factoryAnswer(uId)
-        print (msg)
-        producer.send('test_topic', json.dumps(msg).encode('utf-8'))
-        #producer.send('test_topic', msg)
-        print("finished send msg")
+        for _ in range(random.randint(1,50)):
+            counter += 1
+            msg = factoryAnswer(uId)
+            print (msg)
+            producer.send('test_topic', json.dumps(msg).encode('utf-8'))
+            print("finished send msg")
 
-    print("Done")
+    print("Sent {} in {} seconds".format(counter, time.time() - start_time))
 
 
 if __name__ == "__main__":

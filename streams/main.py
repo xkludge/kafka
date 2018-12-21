@@ -30,11 +30,13 @@ class Answer(faust.Record):
     timestamp: str
     chances: List[Chance]
     schoolID: str
-
+    userID: str
 
 
 app = faust.App('test_stream', broker='kafka://kafka:9092')
 topic = app.topic('test_topic', value_type=Answer)
+student_aggregate = app.Table('student_aggregate', default=int)
+school_aggregate = app.Table('school_aggregate', default=int)
 
 @app.agent(topic)
 async def hello(stream):
@@ -43,6 +45,12 @@ async def hello(stream):
     async for payload in stream:
         print('processing..')
         print(payload)
+        if payload.wasCorrect:
+            print ('aggregating....')
+            student_aggregate[payload.userID] += 1
+            school_aggregate[payload.schoolID] += 1
+            print("uid: {}  totalCorrect: {}".format(payload.userID, student_aggregate[payload.userID]))
+            print("schoolId: {}  totalCorrect: {}".format(payload.schoolID, school_aggregate[payload.schoolID]))
         print('finished...')
 
 
