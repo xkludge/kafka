@@ -20,12 +20,13 @@ start:
 	sleep 3
 	docker-compose up -d --build consumer
 	docker-compose up -d --build streams
+	docker-compose up -d --build producer
 
 stop:
 	docker-compose down
 
 logs:
-	docker-compose logs -f kafka consumer
+	docker-compose logs -f kafka consumer producer streams
 
 consumertest:
 	@echo "consumer test.."

@@ -26,6 +26,14 @@ services:
 #     - ./consumer/app/:/app
     depends_on:
       - kafka
+  producer:
+    container_name: producer
+    build:
+      context: ./producer
+#    volumes:
+#     - ./consumer/app/:/app
+    depends_on:
+      - kafka
   streams:
     container_name: streams
     build:
