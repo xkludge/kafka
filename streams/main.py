@@ -37,6 +37,8 @@ app = faust.App('test_stream', broker='kafka://kafka:9092')
 topic = app.topic('test_topic', value_type=Answer)
 student_aggregate = app.Table('student_aggregate', default=int)
 school_aggregate = app.Table('school_aggregate', default=int)
+student_aggregate_wrong = app.Table('student_aggregate_wrong', default=int)
+school_aggregate_wrong = app.Table('school_aggregate_wrong', default=int)
 
 @app.agent(topic)
 async def hello(stream):
@@ -45,12 +47,25 @@ async def hello(stream):
     async for payload in stream:
         print('processing..')
         print(payload)
-        if payload.wasCorrect:
-            print ('aggregating....')
+        print ('aggregating....')
+        if payload.wasCorrect == 'true':
             student_aggregate[payload.userID] += 1
+            student_aggregate[payload.skillId] += 1
+            school_aggregate[payload.skillId] += 1
             school_aggregate[payload.schoolID] += 1
-            print("uid: {}  totalCorrect: {}".format(payload.userID, student_aggregate[payload.userID]))
-            print("schoolId: {}  totalCorrect: {}".format(payload.schoolID, school_aggregate[payload.schoolID]))
+        else:
+            student_aggregate_wrong[payload.userID] += 1
+            student_aggregate_wrong[payload.skillId] += 1
+            school_aggregate_wrong[payload.skillId] += 1
+            school_aggregate_wrong[payload.schoolID] += 1
+        print("uid: {}  total_correct: {} total_wrong: {}".format(
+            payload.userID,
+            student_aggregate[payload.userID],
+            student_aggregate_wrong[payload.userID]))
+        print("schoolId: {}  total_correct: {} total_wrong: {}".format(
+            payload.schoolID,
+            school_aggregate[payload.schoolID],
+            school_aggregate_wrong[payload.schoolID]))
         print('finished...')
 
 
