@@ -1,4 +1,4 @@
-.PHONY: help start consumertest produce cat stop
+.PHONY: help start consumertest produce cat stop student-topic school-topic
 
 .DEFAULT: help
 help:
@@ -14,9 +14,11 @@ help:
 	@echo "       docker-compose down"
 	@echo "make logs"
 	@echo "       docker-compose logs"
+	@echo "make school-topic || student-topic"
+	@echo "       kafkacat of the aggregate topic to be compacted"
 
 start:
-	docker-compose up -d zookeeper kafka
+	docker-compose up -d --build zookeeper kafka
 	sleep 3
 	docker-compose up -d --build consumer
 	docker-compose up -d --build streams
@@ -38,3 +40,9 @@ produce:
 cat:
 	@echo "kafkacat peek.."
 	@kafkacat -C -b 127.0.0.1:9094 -t test_topic
+
+student-topic:
+	@kafkacat -C -b localhost:9094 -G test_agg1 student_topic
+
+school-topic:
+	@kafkacat -C -b localhost:9094 -G test_agg1 school_topic

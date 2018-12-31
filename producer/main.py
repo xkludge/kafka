@@ -41,7 +41,7 @@ def worker():
     print("Connected..")
     counter = 0
 
-    usersId = ['123','345','678',
+    users_id = ['123','345','678',
                 '789', '123','345',
                 '678','789', '123',
                 '345','678','789',
@@ -49,14 +49,16 @@ def worker():
                 '789', '123','345',
                 '678','789']
 
+    random.shuffle(users_id)
+
     start_time = time.time()
-    for uId in usersId:
+    for uId in users_id:
         print("sending msg")
         for _ in range(random.randint(1,50)):
             counter += 1
             msg = factoryAnswer(uId)
             print (msg)
-            producer.send('test_topic', json.dumps(msg).encode('utf-8'))
+            producer.send('answers', json.dumps(msg).encode('utf-8'))
             print("finished send msg")
 
     print("Sent {} in {} seconds".format(counter, time.time() - start_time))

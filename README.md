@@ -23,3 +23,9 @@ Terminal 1
 ```
 make produce
 ```
+
+## Topics in kafka
+
+-   answers --> ingestion
+-   student_topic --> per student stats
+-   school_topic --> per school stats

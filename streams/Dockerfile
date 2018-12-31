@@ -5,5 +5,7 @@ WORKDIR /app
 ADD requirements.txt /app/
 RUN pip install -r requirements.txt
 ADD main.py main.py
-#CMD  ["python", "/app/main.py"]
-CMD  ["python", "main.py", "worker", "-l", "info"]
+ADD __init__.py __init__.py
+EXPOSE 6666
+
+CMD  ["faust", "-A", "main", "worker", "-l", "info"]

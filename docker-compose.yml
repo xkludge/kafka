@@ -18,7 +18,7 @@ services:
             KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
             KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-            KAFKA_CREATE_TOPICS: 'test_topic:8:1,test_stream-student_aggregate-changelog:8:1,test_stream-school_aggregate-changelog:8:1,test_stream-student_aggregate_wrong-changelog:8:1,test_stream-school_aggregate_wrong-changelog:8:1'
+            KAFKA_CREATE_TOPICS: 'answers:8:1,student_topic:8:1,school_topic:8:1'
     consumer:
         container_name: consumer
         build:
@@ -35,5 +35,7 @@ services:
         container_name: streams
         build:
             context: ./streams
+        ports:
+            - '6666:6666'
         depends_on:
             - kafka
