@@ -18,16 +18,16 @@ help:
 	@echo "       kafkacat of the aggregate topic to be compacted"
 
 start:
-	docker-compose up -d --build zookeeper kafka
+	docker-compose up -d --build example_zookeeper example_kafka
 	sleep 3
-	docker-compose up -d --build consumer
+	docker-compose up -d --build consumer node_consumer
 	docker-compose up -d --build streams
 
 stop:
 	docker-compose down
 
 logs:
-	docker-compose logs -f --tail 200 kafka consumer producer streams 
+	docker-compose logs -f --tail 200 example_kafka consumer producer streams node_consumer
 
 consumertest:
 	@echo "consumer test.."

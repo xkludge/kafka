@@ -37,7 +37,7 @@ def factoryAnswer(userId):
 
 def worker():
     print("starting worker..")
-    producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+    producer = KafkaProducer(bootstrap_servers=['example_kafka:9092'])
     print("Connected..")
     counter = 0
 

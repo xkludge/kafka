@@ -1,19 +1,19 @@
 version: '2'
 services:
-    zookeeper:
-        container_name: zookeeper
+    example_zookeeper:
+        container_name: example_zookeeper
         image: wurstmeister/zookeeper
         ports:
             - '2181:2181'
-    kafka:
-        container_name: kafka
+    example_kafka:
+        container_name: example_kafka
         image: wurstmeister/kafka
         ports:
             - '9092:9092'
             - '9094:9094'
         environment:
             HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
-            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ZOOKEEPER_CONNECT: example_zookeeper:2181
             KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://127.0.0.1:9094
             KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
@@ -24,13 +24,15 @@ services:
         build:
             context: ./consumer
         depends_on:
-            - kafka
+            - example_kafka
+
     producer:
         container_name: producer
         build:
             context: ./producer
         depends_on:
-            - kafka
+            - example_kafka
+
     streams:
         container_name: streams
         build:
@@ -38,4 +40,11 @@ services:
         ports:
             - '6666:6666'
         depends_on:
-            - kafka
+            - example_kafka
+
+    node_consumer:
+        container_name: node_consumer
+        build:
+            context: ./node_consumer
+        depends_on:
+            - example_kafka

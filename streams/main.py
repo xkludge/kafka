@@ -3,14 +3,6 @@ import faust
 from typing import Dict, List, Mapping
 
 
-#{"key": "value", "key1": "value", "keyList": [0,1,3,4]}
-#{"data": {"skillId": "173", "questionID": "557", "userAnswer": "Main follow position world.", "wasCorrect": "false", "timezooneOffset": 300, "respTime": "167", "hintID": "-1", "hwID": "0", 
-#"ownersIDs": ["12345", "42195"], "timestamp": 1545363876.6810524, "chances": [{"chance": "1", "userAnswer": ["b"], "wasCorrect": "false", "respTime": "5"}
-
-
-# [^-Agent*: __main__.hello]: Crashed reason=ValueDecodeError("__init__() missing 11 required positional arguments: 
-# 'skillId', 'questionID', 'userAnswer', 'wasCorrect', 'timezooneOffset', 'respTime', 'hintID', 'hwID', 'owernersIDs', 'timestamp', and 'chances'",)
-
 class Chance(faust.Record):
     chance: int
     wasCorrect: bool
@@ -34,7 +26,7 @@ class Answer(faust.Record):
     userID: str
 
 
-app = faust.App('answers_stream', broker='kafka://kafka:9092',)
+app = faust.App('answers_stream', broker='kafka://example_kafka:9092',)
 
 topic = app.topic('answers', value_type=Answer)
 student_aggregate = app.Table('student_aggregate', default=int)
@@ -89,11 +81,11 @@ async def hello(stream):
         print('finished...')
 
 
-@app.page('/student/{userID}')
+@app.page('/student/{userID}/')
 @app.table_route(table=student_aggregate, match_info='userID')
 async def get_count(web, request, userID):
     return web.json({
-        'hello': 'world',
+        'student': student_aggregate[userID],
     })
 
 
